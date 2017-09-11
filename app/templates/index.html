@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Webpack ES.next Boilerplate</title>
+
+  <!-- List dependencies in the head for faster discovery/preloading -->
+  <script type="module" src="{{ 'runtime.js' | revision }}"></script>
+  <script type="module" src="{{ 'main.js' | revision }}"></script>
+</head>
+<body>
+  {% include 'nomodule-shim.html' %}
+  <script nomodule src="{{ 'runtime-legacy.js' | revision }}"></script>
+  <script nomodule src="{{ 'main-legacy.js' | revision }}"></script>
+</body>
+</html>

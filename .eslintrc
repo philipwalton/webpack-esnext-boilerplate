@@ -10,5 +10,8 @@
   },
   "extends": [
     "eslint:recommended", "google"
-  ]
+  ],
+  "rules": {
+    "no-console": 0,
+  }
 }
