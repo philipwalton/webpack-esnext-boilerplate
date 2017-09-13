@@ -2,7 +2,7 @@
 
 Webpack configuration and build scripts to deploy ES2015+ code to production (via `<script type="module">`) with legacy browser fallback support via `<script nomodule>`.
 
-This boilerplate is an implementation of the techniques described in my article: [Deploying ES2015+ Code to Production Today (without Transpiling)](https://philipwalton.com/articles/deploying-es2015-code-to-production-today-without-transpiling/)
+This boilerplate is an implementation of the techniques described in my article: [Deploying ES2015+ Code to Production Today (without Transpiling)](https://philipwalton.com/articles/deploying-es2015-code-in-production-today/)
 
 ## Usage
 
