@@ -10,7 +10,7 @@ const config = require('./config.json');
 let revisionedAssetManifest = fs.readJsonSync(path.join(
     config.publicDir, config.manifestFileName), {throws: false}) || {};
 
-const getPlugins = (opts = {}) => {
+const configurePlugins = (opts = {}) => {
   const plugins = [
     // Give modules a deterministic name for better long-term caching:
     // https://github.com/webpack/webpack.js.org/issues/652#issuecomment-273023082
@@ -25,7 +25,7 @@ const getPlugins = (opts = {}) => {
     // Extract runtime code so updates don't affect app-code caching:
     // https://webpack.js.org/guides/caching/
     new webpack.optimize.CommonsChunkPlugin({
-      name: opts.isLegacy ? 'runtime-legacy' : 'runtime',
+      name: opts.runtimeName || 'runtime',
     }),
 
     // Give deterministic names to all webpacks non-"normal" modules
@@ -39,14 +39,44 @@ const getPlugins = (opts = {}) => {
   ];
 
   if (process.env.NODE_ENV == 'production') {
-    plugins.push(new UglifyJSPlugin());
+    plugins.push(new UglifyJSPlugin({
+      sourceMap: true,
+      uglifyOptions: {
+        mangle: {
+          // Works around a Safari 10 bug:
+          // https://github.com/mishoo/UglifyJS2/issues/1753
+          safari10: true,
+        },
+      },
+    }));
   }
 
   return plugins;
 };
 
+const configureBabelLoader = (browserlist) => {
+  return {
+    test: /\.js$/,
+    use: {
+      loader: 'babel-loader',
+      options: {
+        presets: [
+          ['env', {
+            debug: true,
+            modules: false,
+            useBuiltIns: true,
+            targets: {
+              browsers: browserlist,
+            },
+          }],
+        ],
+        plugins: ['syntax-dynamic-import'],
+      },
+    },
+  };
+};
+
 const baseConfig = {
-  plugins: getPlugins({isLegacy: false}),
   output: {
     path: path.resolve(__dirname, '..', config.publicDir),
     publicPath: '/',
@@ -60,29 +90,33 @@ const modernConfig = Object.assign({}, baseConfig, {
   entry: {
     'main': './app/scripts/main.js',
   },
-  plugins: getPlugins({isLegacy: false}),
+  plugins: configurePlugins({runtimeName: 'runtime'}),
+  module: {
+    rules: [
+      configureBabelLoader([
+        'last 2 Chrome versions',
+        'last 2 Safari versions',
+        'last 2 iOS versions',
+        'not Chrome < 61',
+        'not Safari < 10.1',
+        'not iOS < 10.3',
+      ]),
+    ],
+  },
 });
 
 const legacyConfig = Object.assign({}, baseConfig, {
   entry: {
     'main-legacy': './app/scripts/main-legacy.js',
   },
-  plugins: getPlugins({isLegacy: true}),
+  plugins: configurePlugins({runtimeName: 'runtime-legacy'}),
   module: {
     rules: [
-      {
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['env'],
-            plugins: ['syntax-dynamic-import'],
-          },
-        },
-        resource: {
-          test: /\.js$/,
-          exclude: /node_modules/,
-        },
-      },
+      configureBabelLoader([
+        '> 1%',
+        'last 2 versions',
+        'Firefox ESR',
+      ]),
     ],
   },
 });
