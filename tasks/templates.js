@@ -2,20 +2,19 @@ const fs = require('fs-extra');
 const nunjucks = require('nunjucks');
 const path = require('path');
 const config = require('./config.json');
+const {getRevisionedAssetUrl} = require('./utils/assets');
 
-let revisionedAssetManifest = {};
 
 const env = nunjucks.configure('app/templates', {
   autoescape: false,
   watch: false,
 });
 
-env.addFilter('revision', (filename) => revisionedAssetManifest[filename]);
+env.addFilter('revision', (filename) => {
+  return getRevisionedAssetUrl(filename);
+});
 
 module.exports = async () => {
-  revisionedAssetManifest = await fs.readJson(path.join(
-      config.publicDir, config.manifestFileName), {throws: false}) || {};
-
   await fs.outputFile(
     path.join(config.publicDir, 'index.html'), nunjucks.render('index.html'));
 

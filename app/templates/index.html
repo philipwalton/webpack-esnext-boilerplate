@@ -5,12 +5,12 @@
   <title>Webpack ES.next Boilerplate</title>
 
   <!-- List dependencies in the head for faster discovery/preloading -->
-  <script type="module" src="{{ 'runtime.js' | revision }}"></script>
-  <script type="module" src="{{ 'main.js' | revision }}"></script>
+  <script type="module" src="{{ 'runtime.mjs' | revision }}"></script>
+  <script type="module" src="{{ 'main.mjs' | revision }}"></script>
 </head>
 <body>
   {% include 'nomodule-shim.html' %}
-  <script nomodule src="{{ 'runtime-legacy.js' | revision }}"></script>
-  <script nomodule src="{{ 'main-legacy.js' | revision }}"></script>
+  <script nomodule src="{{ 'runtime.es5.js' | revision }}"></script>
+  <script nomodule src="{{ 'main.es5.js' | revision }}"></script>
 </body>
 </html>
