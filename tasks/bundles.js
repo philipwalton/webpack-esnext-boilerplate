@@ -108,7 +108,7 @@ const modernConfig = Object.assign({}, baseConfig, {
 
 const legacyConfig = Object.assign({}, baseConfig, {
   entry: {
-    'main': './app/scripts/main-legacy.js',
+    'main-legacy': './app/scripts/main-legacy.js',
   },
   output: {
     path: path.resolve(__dirname, '..', config.publicDir),
