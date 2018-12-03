@@ -70,6 +70,7 @@ const baseConfig = {
   optimization: {
     runtimeChunk: 'single',
     minimizer: [new TerserPlugin({
+      test: /\.m?js(\?.*)?$/i,
       sourceMap: true,
       terserOptions: {
         mangle: {
