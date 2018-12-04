@@ -1,4 +1,4 @@
-import 'babel-polyfill';
+import '@babel/polyfill';
 import {dep1} from './dep-1.js';
 import {dep2} from './dep-2.js';
 
