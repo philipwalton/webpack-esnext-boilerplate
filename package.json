@@ -23,12 +23,12 @@
   },
   "homepage": "https://github.com/philipwalton/webpack-esnext-boilerplate#readme",
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-eslint": "^8.2.6",
-    "babel-loader": "^7.1.5",
-    "babel-plugin-syntax-dynamic-import": "^6.18.0",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
+    "@babel/core": "^7.2.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+    "@babel/polyfill": "^7.0.0",
+    "@babel/preset-env": "^7.2.0",
+    "babel-eslint": "^9.0.0",
+    "babel-loader": "^8.0.4",
     "chokidar": "^2.0.4",
     "connect": "^3.6.6",
     "eslint": "^5.3.0",
@@ -39,9 +39,9 @@
     "name-all-modules-plugin": "^1.0.1",
     "nunjucks": "^3.1.3",
     "serve-static": "^1.13.2",
-    "terser-webpack-plugin": "^1.0.0",
-    "webpack": "^4.16.5",
-    "webpack-manifest-plugin": "^2.0.3",
+    "terser-webpack-plugin": "^1.1.0",
+    "webpack": "^4.26.1",
+    "webpack-manifest-plugin": "^2.0.4",
     "whatwg-fetch": "^2.0.4"
   }
 }
