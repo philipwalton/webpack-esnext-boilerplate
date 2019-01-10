@@ -1,6 +1,4 @@
-const fs = require('fs-extra');
 const md5 = require('md5');
-const NameAllModulesPlugin = require('name-all-modules-plugin');
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
 const webpack = require('webpack');
@@ -18,8 +16,8 @@ const configurePlugins = () => {
         return md5(Array.from(chunk.modulesIterable, (m) => {
           return m.identifier();
         }).join()).slice(0, 10);
-      }
-      return chunk.name ? chunk.name : hashChunk()
+      };
+      return chunk.name ? chunk.name : hashChunk();
     }),
 
     new ManifestPlugin({
@@ -30,7 +28,7 @@ const configurePlugins = () => {
           // Needed until this issue is resolved:
           // https://github.com/danethurber/webpack-manifest-plugin/issues/159
           const unhashedName = path.basename(opts.path)
-              .replace(/[_\.\-][0-9a-f]{10}/, '')
+              .replace(/[_.-][0-9a-f]{10}/, '');
 
           addAsset(unhashedName, opts.path);
           return getManifest();
@@ -110,7 +108,7 @@ const modernConfig = Object.assign({}, baseConfig, {
 
 const legacyConfig = Object.assign({}, baseConfig, {
   entry: {
-    'main': './app/scripts/main-legacy.js',
+    'main-legacy': './app/scripts/main-legacy.js',
   },
   output: {
     path: path.resolve(__dirname, '..', config.publicDir),
