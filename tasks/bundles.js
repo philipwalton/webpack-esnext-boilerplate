@@ -73,11 +73,6 @@ const baseConfig = {
       test: /\.m?js(\?.*)?$/i,
       sourceMap: true,
       terserOptions: {
-        mangle: {
-          properties: {
-            regex: /(^_|_$)/,
-          },
-        },
         safari10: true,
       },
     })],
