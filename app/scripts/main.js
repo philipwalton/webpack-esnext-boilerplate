@@ -1,4 +1,3 @@
-import '@babel/polyfill';
 import {dep1} from './dep-1.js';
 import {dep2} from './dep-2.js';
 
@@ -7,13 +6,13 @@ const main = async () => {
   console.log('Dependency 2 value:', dep2);
 
   const {import1} = await import(
-    /* webpackChunkName: "import1" */
-    './import-1.js');
+      /* webpackChunkName: "import1" */
+      './import-1.js');
   console.log('Dynamic Import 1 value:', import1);
 
   const {import2} = await import(
-    /* webpackChunkName: "import2" */
-    './import-2.js');
+      /* webpackChunkName: "import2" */
+      './import-2.js');
   console.log('Dynamic Import 2 value:', import2);
 
   console.log('Fetching data, awaiting response...');

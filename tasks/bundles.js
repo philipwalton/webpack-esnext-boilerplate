@@ -8,18 +8,10 @@ const {addAsset, getManifest} = require('./utils/assets');
 
 const configurePlugins = () => {
   const plugins = [
-    // Give dynamically `import()`-ed scripts a deterministic name for better
-    // long-term caching. Solution adapted from:
-    // https://medium.com/webpack/predictable-long-term-caching-with-webpack-d3eee1d3fa31
-    new webpack.NamedChunksPlugin((chunk) => {
-      const hashChunk = () => {
-        return md5(Array.from(chunk.modulesIterable, (m) => {
-          return m.identifier();
-        }).join()).slice(0, 10);
-      };
-      return chunk.name ? chunk.name : hashChunk();
-    }),
+    // Identify each module by a hash, so caching is more predictable.
+    new webpack.HashedModuleIdsPlugin(),
 
+    // Create manifest of the original filenames to their hashed filenames.
     new ManifestPlugin({
       seed: getManifest(),
       fileName: config.manifestFileName,
@@ -27,10 +19,10 @@ const configurePlugins = () => {
         return files.reduce((manifest, opts) => {
           // Needed until this issue is resolved:
           // https://github.com/danethurber/webpack-manifest-plugin/issues/159
-          const unhashedName = path.basename(opts.path)
-              .replace(/[_.-][0-9a-f]{10}/, '');
+          const name = path.basename(opts.path);
+          const unhashedName = name.replace(/[_.-][0-9a-f]{10}/, '');
 
-          addAsset(unhashedName, opts.path);
+          addAsset(unhashedName, name);
           return getManifest();
         }, seed);
       },
@@ -47,11 +39,17 @@ const configureBabelLoader = (browserlist) => {
       loader: 'babel-loader',
       options: {
         babelrc: false,
+        exclude: [
+          /core-js/,
+          /regenerator-runtime/,
+        ],
         presets: [
           ['@babel/preset-env', {
-            debug: true,
+            loose: true,
             modules: false,
-            useBuiltIns: 'entry',
+            // debug: true,
+            corejs: 3,
+            useBuiltIns: 'usage',
             targets: {
               browsers: browserlist,
             },
@@ -68,7 +66,6 @@ const baseConfig = {
   cache: {},
   devtool: '#source-map',
   optimization: {
-    runtimeChunk: 'single',
     minimizer: [new TerserPlugin({
       test: /\.m?js(\?.*)?$/i,
       sourceMap: true,
@@ -106,12 +103,12 @@ const modernConfig = Object.assign({}, baseConfig, {
 
 const legacyConfig = Object.assign({}, baseConfig, {
   entry: {
-    'main-legacy': './app/scripts/main-legacy.js',
+    'nomodule': './app/scripts/nomodule.js',
   },
   output: {
     path: path.resolve(__dirname, '..', config.publicDir),
     publicPath: '/',
-    filename: '[name]-[chunkhash:10].es5.js',
+    filename: '[name]-[chunkhash:10].js',
   },
   plugins: configurePlugins(),
   module: {
