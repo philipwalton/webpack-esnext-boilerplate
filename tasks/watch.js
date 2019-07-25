@@ -1,6 +1,6 @@
 const chokidar = require('chokidar');
 const connect = require('connect');
-const debounce = require('lodash.debounce');
+const {debounce} = require('lodash');
 const serveStatic = require('serve-static');
 const compile = require('./compile');
 const config = require('./config.json');
